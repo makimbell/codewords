@@ -2,6 +2,10 @@ var wordList = getWordList()
 
 setUpcards(wordList);
 
+$(document).on('click', function() {
+  alert("test2")
+})
+
 function getWordList () {
   var wordList = [
     ['one','two','three','four','five'],
@@ -42,4 +46,8 @@ function setUpcards(wordList) {
 
     }
   }
+}
+
+function clickTest(){
+  alert("great");
 }

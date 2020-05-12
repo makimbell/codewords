@@ -2,44 +2,50 @@ var wordList = getWordList();
 
 setUpCards(wordList);
 
-// Handle card click
-$(".card").on('click', '*', function (event) {
+var cards = $(".card");
 
-    // Find id of Card that was clicked on, whether user clicked card, cardTitle, or cardBody
+// Handle card hover
+cards.hover(function() {
+    $(this).addClass("bg-secondary");
+}, function(){
+    $(this).removeClass("bg-secondary");
+});
+
+// Handle card click (this will need to be changed based on whose turn it is, state of the board, etc.)
+cards.on('click', '*', function (event) {
+    let id = getClickedCard(event);
+    console.log(id);
+});
+
+function getClickedCard(event){
+    event.stopImmediatePropagation(); //This prevents this from running twice when the inner element is clicked. It's a bad solution
     let target = event.target;
     let id = target.id;
     while(id===""){
         target = target.parentElement;
         id = target.id;
     }
-    console.log(id);
-});
-
-// Handle card hover
-$(".card").hover(function() {
-    $(this).addClass("bg-secondary");
-    }, function(){
-    $(this).removeClass("bg-secondary");
-});
+    return id;
+}
 
 function getWordList() {
-    var wordList = [
+    return [
         ['one', 'two', 'three', 'four', 'five'],
         ['six', 'seven', 'eight', '9', '10'],
         ['11', '12', '13', '14', '15'],
         ['16', '17', '18', '19', '20'],
         ['21', '22', '23', '24', '25'],
-    ];
-    return wordList
+    ]
 }
 
 function setUpCards(wordList) {
 
-    for (currentRow = 0; currentRow < 5; currentRow++) {
-        for (currentCol = 0; currentCol < 5; currentCol++) {
+    let row, column, card, cardBody, cardTitle;
+
+    for (let currentRow = 0; currentRow < 5; currentRow++) {
+        for (let currentCol = 0; currentCol < 5; currentCol++) {
 
             row = document.getElementById("row" + currentRow);
-            console.log(row);
 
             column = document.createElement("div");
             column.className = "col-sm";
@@ -48,15 +54,15 @@ function setUpCards(wordList) {
             card.className = "card text-center";
             card.id = currentRow.toString() + "," + currentCol.toString();
 
-            cardbody = document.createElement("div");
-            cardbody.className = "card-body";
+            cardBody = document.createElement("div");
+            cardBody.className = "card-body";
 
             cardTitle = document.createElement("h4");
             cardTitle.className = "card-title";
             cardTitle.innerText = wordList[currentRow][currentCol];
 
-            cardbody.appendChild(cardTitle);
-            card.appendChild(cardbody);
+            cardBody.appendChild(cardTitle);
+            card.appendChild(cardBody);
             column.appendChild(card);
             row.appendChild(column);
 

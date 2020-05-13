@@ -3,6 +3,7 @@ var wordList = getWordList();
 setUpCards(wordList);
 var playerOneKey = generateKey();
 var playerTwoKey = generateKey();
+var boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition
 
 console.log(playerOneKey)
 console.log(playerTwoKey)
@@ -64,6 +65,17 @@ function generateKey() {
 
     return arrayKey
 }
+
+function refreshBoard() {
+    //TODO: Show current state of board. All spaces either blank with word (unguessed)
+    //  or something to indicate that the card has been correctly guessed
+}
+
+function showPlayerBoard() {
+    // Show either player one or player two board so that they can give clues to the other player
+    // Highlight based on playerKey, but don't show already guessed cards
+}
+
 
 function setUpCards(wordList) {
 

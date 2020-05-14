@@ -1,19 +1,18 @@
-
 var wordList = getWordList();
 setUpCards(wordList);
 var playerOneKey = generateKey();
 var playerTwoKey = generateKey();
 var boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition
 
-console.log(playerOneKey)
-console.log(playerTwoKey)
+console.log(playerOneKey);
+console.log(playerTwoKey);
 
 var cards = $(".card");
 
 // Card hover
-cards.hover(function() {
+cards.hover(function () {
     $(this).addClass("bg-secondary");
-}, function(){
+}, function () {
     $(this).removeClass("bg-secondary");
 });
 
@@ -23,20 +22,20 @@ cards.on('click', '*', function (event) {
     guessCard(clickedCard);
 });
 
-function guessCard(card){
+function guessCard(card) {
 
-    if (playerOneKey[card.id] === "1"){
+    if (playerOneKey[card.id] === "1") {
         $(card).addClass("bg-success")
     } else {
         $(card).addClass("bg-danger")
     }
 }
 
-function getClickedCard(event){
+function getClickedCard(event) {
     event.stopImmediatePropagation(); //This prevents this from running twice when the inner element is clicked. It's a bad solution
     let target = event.target;
     let id = target.id;
-    while(id===""){
+    while (id === "") {
         target = target.parentElement;
         id = target.id;
     }
@@ -58,9 +57,9 @@ function generateKey() {
     let key = "0".repeat(16);
 
     // Instert nine 1's into the key in random places
-    let arrayKey = key.split('')
-    while(arrayKey.length < 25){
-        arrayKey.splice(Math.round(Math.random() * arrayKey.length),0,"1");
+    let arrayKey = key.split('');
+    while (arrayKey.length < 25) {
+        arrayKey.splice(Math.round(Math.random() * arrayKey.length), 0, "1");
     }
 
     return arrayKey
@@ -83,7 +82,7 @@ function setUpCards(wordList) {
 
     for (let currentRow = 0; currentRow < 5; currentRow++) {
         for (let currentCol = 0; currentCol < 5; currentCol++) {
-            
+
             let currentCardNum = (currentRow * 5) + currentCol;
 
             row = document.getElementById("row" + currentRow);

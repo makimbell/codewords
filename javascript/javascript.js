@@ -90,9 +90,9 @@ function generatePlayerTwoKey(seedKeyArray) {
     let index;
     while (num < 9) {
         // First get 3 matches
-        while (matches < 3){
+        while (matches < 3) {
             index = Math.round(Math.random() * 25);
-            if (arrayKey[index] === "0" && seedKeyArray[index] === "1"){
+            if (arrayKey[index] === "0" && seedKeyArray[index] === "1") {
                 arrayKey[index] = "1";
                 matches++;
                 num++;

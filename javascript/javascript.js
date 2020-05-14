@@ -1,13 +1,15 @@
-var wordList = getWordList();
+//Game setup
+const wordList = getWordList();
 setUpCards(wordList);
-var playerOneKey = generateKey();
-var playerTwoKey = generateKey();
-var boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition
+const playerKeys = generateKeys();
+const playerOneKey = playerKeys[0];
+const playerTwoKey = playerKeys[1];
+let boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition
 
 console.log(playerOneKey);
 console.log(playerTwoKey);
 
-var cards = $(".card");
+const cards = $(".card");
 
 // Card hover
 cards.hover(function () {
@@ -52,16 +54,57 @@ function getWordList() {
     ]
 }
 
-function generateKey() {
-    // Start with a string of sixteen 0's
-    let key = "0".repeat(16);
+function generateKeys() {
+    let key1 = generatePlayerOneKey();
+    let key2 = generatePlayerTwoKey(key1);
+    return [key1, key2];
+}
 
-    // Instert nine 1's into the key in random places
+function generatePlayerOneKey() {
+    // Start with a blank key
+    let key = "0".repeat(25);
     let arrayKey = key.split('');
-    while (arrayKey.length < 25) {
-        arrayKey.splice(Math.round(Math.random() * arrayKey.length), 0, "1");
-    }
 
+    // Choose 9 unique spots to be correct answers
+    let num = 0;
+    let index;
+    while (num < 9) {
+        index = Math.round(Math.random() * 25);
+        if (arrayKey[index] === "0") {
+            arrayKey[index] = "1";
+            num++;
+        }
+    }
+    return arrayKey
+}
+
+function generatePlayerTwoKey(seedKeyArray) {
+    // Start with a blank key
+    let key = "0".repeat(25);
+    let arrayKey = key.split('');
+
+    // Choose 9 unique spots to be correct answers
+    //  Exactly 3 must match the seedKey
+    let num = 0;
+    let matches = 0;
+    let index;
+    while (num < 9) {
+        // First get 3 matches
+        while (matches < 3){
+            index = Math.round(Math.random() * 25);
+            if (arrayKey[index] === "0" && seedKeyArray[index] === "1"){
+                arrayKey[index] = "1";
+                matches++;
+                num++;
+            }
+        }
+        // Now fill in the rest of the key
+        index = Math.round(Math.random() * 25);
+        if (arrayKey[index] === "0" && seedKeyArray[index] === "0") {
+            arrayKey[index] = "1";
+            num++;
+        }
+    }
     return arrayKey
 }
 

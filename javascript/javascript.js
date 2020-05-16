@@ -1,10 +1,12 @@
+//TODO: Refactor and split utility functions into other files
+
 //Game setup
 const wordList = getWordList();
 setUpCards(wordList);
 const playerKeys = generateKeys();
 const playerOneKey = playerKeys[0];
 const playerTwoKey = playerKeys[1];
-let boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition
+let boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition -- actually when 15 have been guessed, that's a win, right?
 
 console.log(playerOneKey);
 console.log(playerTwoKey);
@@ -25,7 +27,6 @@ cards.on('click', '*', function (event) {
 });
 
 function guessCard(card) {
-
     if (playerOneKey[card.id] === "1") {
         $(card).addClass("bg-success")
     } else {
@@ -45,13 +46,15 @@ function getClickedCard(event) {
 }
 
 function getWordList() {
-    return [
-        'one', 'two', 'three', 'four', 'five',
-        'six', 'seven', 'eight', '9', '10',
-        '11', '12', '13', '14', '15',
-        '16', '17', '18', '19', '20',
-        '21', '22', '23', '24', '25',
-    ]
+    let wordList = [];
+    for (let i = 0; i < 25; i++) {
+        let wordIndex = Math.floor(Math.random() * wordBank.length);
+        wordBank.splice(wordIndex, 1);
+        wordList.push(wordBank[wordIndex]);
+    }
+
+    return wordList;
+
 }
 
 function generateKeys() {

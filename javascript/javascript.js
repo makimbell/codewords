@@ -48,7 +48,7 @@ function guessCard(card) {
 }
 
 function getClickedCard(event) {
-    event.stopImmediatePropagation(); //This prevents this from running twice when the inner element is clicked. It's a bad solution
+    event.stopImmediatePropagation(); //Prevents this from running twice when the inner element is clicked. It's a bad solution
     let target = event.target;
     let id = target.id;
     while (id === "") {
@@ -65,9 +65,7 @@ function getWordList() {
         wordBank.splice(wordIndex, 1);
         wordList.push(wordBank[wordIndex]);
     }
-
     return wordList;
-
 }
 
 function generateKeys() {
@@ -126,8 +124,8 @@ function generatePlayerTwoKey(seedKeyArray) {
 
 function refreshBoard() {
     //TODO: Show current state of board. All spaces either blank with word (unguessed)
-    // or something to indicate that the card has been correctly guessed
-    // Need to know whose turn it is so we know which state to show the board in
+    // or something to indicate that the card has been correctly guessed OR incorrectly guessed
+    // Need to know whose turn it is so we know which state to show the board in. Or pass in playerOneProgress[]?
 }
 
 function showPlayerBoard() {
@@ -148,7 +146,7 @@ function setUpCards(wordList) {
             row = document.getElementById("row" + currentRow);
 
             column = document.createElement("div");
-            column.className = "col-sm";
+            column.className = "col";
 
             card = document.createElement("div");
             card.className = "card text-center";

@@ -1,6 +1,7 @@
-//TODO: Read from file
+//TODO: Read these from file
+//TODO: Optionally include
 
-var wordBank = [
+let wordBank = [
     "Hollywood",
     "Screen",
     "Play",

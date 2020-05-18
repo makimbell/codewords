@@ -7,11 +7,24 @@ const playerKeys = generateKeys();
 const playerOneKey = playerKeys[0];
 const playerTwoKey = playerKeys[1];
 let boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition -- actually when 15 have been guessed, that's a win, right?
-
-console.log(playerOneKey);
-console.log(playerTwoKey);
-
 const cards = $(".card");
+
+// TODO: Show options
+//  Include "18+" words?
+
+// Main game loop
+// TODO: Main game loop goes here
+// WHILE (game not over)
+//  while( turn = player 1) and game not over?
+//      player 1 guess logic
+//    end while
+//    turn = player 2
+//  while (turn = player 2) and game not over?
+//      player 2 guess logic
+//    end while
+//    turn = player 1
+//  END WHILE
+// Game end
 
 // Card hover
 cards.hover(function () {
@@ -22,8 +35,8 @@ cards.hover(function () {
 
 // Card click
 cards.on('click', '*', function (event) {
-    let clickedCard = getClickedCard(event);
-    guessCard(clickedCard);
+    let card = getClickedCard(event);
+    guessCard(card);
 });
 
 function guessCard(card) {
@@ -113,7 +126,8 @@ function generatePlayerTwoKey(seedKeyArray) {
 
 function refreshBoard() {
     //TODO: Show current state of board. All spaces either blank with word (unguessed)
-    //  or something to indicate that the card has been correctly guessed
+    // or something to indicate that the card has been correctly guessed
+    // Need to know whose turn it is so we know which state to show the board in
 }
 
 function showPlayerBoard() {

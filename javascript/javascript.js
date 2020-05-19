@@ -9,19 +9,22 @@ let gameOver = false;
 let playerGuessing = 2;
 const cards = $(".card");
 
-function p1GiveClue(){
+function p1GiveClue() {
     playerGuessing = 2;
     showPlayerBoard(playerGuessing);
 }
-function p2GiveClue(){
+
+function p2GiveClue() {
     playerGuessing = 1;
     showPlayerBoard(playerGuessing);
 }
-function p1Guess(){
+
+function p1Guess() {
     playerGuessing = 1;
     showGuessBoard();
 }
-function p2Guess(){
+
+function p2Guess() {
     playerGuessing = 2;
     showGuessBoard();
 }
@@ -70,8 +73,8 @@ function getWordList() {
     let wordList = [];
     for (let i = 0; i < 25; i++) {
         let wordIndex = Math.floor(Math.random() * wordBank.length);
-        wordBank.splice(wordIndex, 1);
         wordList.push(wordBank[wordIndex]);
+        wordBank.splice(wordIndex, 1); // Remove used word
     }
     return wordList;
 }

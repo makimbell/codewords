@@ -1,5 +1,5 @@
 //TODO: Read these from file
-//TODO: Optionally include
+//TODO: Optionally include "18+" words
 
 let wordBank = [
     "Hollywood",

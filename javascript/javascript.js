@@ -1,33 +1,72 @@
-//Game setup
+// Game setup
 const wordList = getWordList();
 setUpCards(wordList);
+
 const playerKeys = generateKeys();
 const playerOneKey = playerKeys[0];
 const playerTwoKey = playerKeys[1];
+
 let boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition -- actually when 15 have been guessed, that's a win, right?
 let gameOver = false;
 let playerGuessing = 2;
-const cards = $(".card");
 
+const cards = $(".card");
+const instructionHeader = $("#instruction-header")[0];
+const instructionText = $("#instruction-text")[0];
+
+
+// Testing functions (NOT PERMANENT)
 function p1GiveClue() {
+    // Manage board and game
+    clearBoard();
+    showBoardProgress();
     playerGuessing = 2;
     showPlayerBoard(playerGuessing);
+
+    // Set instructions
+    setInstructions(
+        "Player 1 Clue Phase:",
+        "Your words are highlighted in green. Think of a clue to give player 2, then click p2 Guess"
+    );
 }
 
 function p2GiveClue() {
+    clearBoard();
+    showBoardProgress();
     playerGuessing = 1;
     showPlayerBoard(playerGuessing);
+
+    // Set instructions
+    setInstructions(
+        "Player 2 Clue Phase:",
+        "Your words are highlighted in green. Think of a clue to give player 1, then click p1 Guess"
+    );
 }
 
 function p1Guess() {
+    clearBoard();
     playerGuessing = 1;
-    showGuessBoard();
+    showBoardProgress();
+
+    // Set instructions
+    setInstructions(
+        "Player 1 Guess Phase:",
+        "Use the clue Player 2 gave you to click on as many cards as you want. Then click player 1 Give Clue"
+    );
 }
 
 function p2Guess() {
+    clearBoard();
     playerGuessing = 2;
-    showGuessBoard();
+    showBoardProgress();
+
+    // Set instructions
+    setInstructions(
+        "Player 2 Guess Phase:",
+        "Use the clue Player 1 gave you to click on as many cards as you want. Then click player 2 Give Clue"
+    );
 }
+// Testing functions end
 
 
 // Card hover
@@ -47,11 +86,13 @@ function guessCard(card, playerGuessing) {
     if (playerGuessing === 1)
         if (playerTwoKey[card.id] === "1") {
             $(card).addClass("bg-success")
+            boardProgress[card.id.toString()] = "1";
         } else {
             $(card).addClass("bg-danger")
         } else {
         if (playerOneKey[card.id] === "1") {
             $(card).addClass("bg-success")
+            boardProgress[card.id.toString()] = "1";
         } else {
             $(card).addClass("bg-danger")
         }
@@ -133,10 +174,13 @@ function generatePlayerTwoKey(seedKeyArray) {
     return arrayKey
 }
 
-function showGuessBoard() {
-    //TODO: Show current state of board. All spaces either blank with word (unguessed)
-    // or something to indicate that the card has been correctly guessed OR incorrectly guessed
-    // Need to know whose turn it is so we know which state to show the board in. Or pass in playerOneProgress[]?
+function showBoardProgress() {
+    for (let i = 0; i < 25; i++) {
+        if (boardProgress[i] === "1") {
+            $(cards[i]).addClass("bg-success");
+        }
+    }
+
 }
 
 function showPlayerBoard(playerGuessing) {
@@ -145,25 +189,29 @@ function showPlayerBoard(playerGuessing) {
     // Turn = 1 means player 1 will be guessing this turn, so we are showing playerTwoKey to playerTwo
     if (playerGuessing === 1) {
         for (let i = 0; i < playerTwoKey.length; i++) {
-            currentCard = document.getElementById(i.toString());
             if (playerTwoKey[i] === "1") {
                 // This means the card is part of PlayerTwo key
-                $(currentCard).addClass("text-success")
+                $(cards[i]).addClass("text-success")
             }
         }
     } else {
         for (let i = 0; i < playerOneKey.length; i++) {
-            currentCard = document.getElementById(i.toString());
             if (playerOneKey[i] === "1") {
                 // This means the card is part of PlayerOne key
-                $(currentCard).addClass("text-success")
+                $(cards[i]).addClass("text-success")
             }
         }
     }
 }
 
 function clearBoard() {
-    //TODO: Implement
+    cards.removeClass();
+    cards.addClass("card text-center");
+}
+
+function setInstructions(headerMessage, instructionMessage){
+    instructionHeader.innerText = headerMessage;
+    instructionText.innerText = instructionMessage;
 }
 
 
@@ -199,4 +247,13 @@ function setUpCards(wordList) {
             row.appendChild(column);
         }
     }
+}
+
+
+// Game loop
+while (!gameOver) {
+    //alert("Player 1 turn to give clue. [Display instructions]");
+
+
+    gameOver = true;
 }

@@ -6,16 +6,50 @@ const playerKeys = generateKeys();
 const playerOneKey = playerKeys[0];
 const playerTwoKey = playerKeys[1];
 
-let boardProgress = "0".repeat(25).split(''); // TODO: Need something to compare this to for win condition -- actually when 15 have been guessed, that's a win, right?
+const gamePhases = {
+    GAMESTART : 0,
+    P1_GIVECLUE : 1,
+    P2_GUESS : 2,
+    P2_GIVECLUE : 3,
+    P1_GUESS : 4,
+    INVALID : 5
+}
+
+let boardProgress = "0".repeat(25).split('');
 let gameOver = false;
 let playerGuessing = 2;
+let gamePhase = gamePhases.GAMESTART;
 
 const cards = $(".card");
-const instructionHeader = $("#instruction-header")[0];
-const instructionText = $("#instruction-text")[0];
+const instructionHeader = document.getElementById("instruction-header");
+const instructionText = document.getElementById("instruction-text");
+const gameButton = document.getElementById("gameButton");
 
 
-// Testing functions (NOT PERMANENT)
+function nextPhase(){
+    gamePhase++;
+
+    if (gamePhase === gamePhases.INVALID){
+        gamePhase = gamePhases.P1_GIVECLUE;
+    }
+    
+
+    switch (gamePhase) {
+        case gamePhases.P1_GIVECLUE:
+            p1GiveClue();
+            break;
+        case gamePhases.P2_GUESS:
+            p2Guess();
+            break;
+        case gamePhases.P2_GIVECLUE:
+            p2GiveClue();
+            break;
+        case gamePhases.P1_GUESS:
+            p1Guess();
+            break;
+    }
+}
+
 function p1GiveClue() {
     // Manage board and game
     clearBoard();
@@ -25,8 +59,29 @@ function p1GiveClue() {
 
     // Set instructions
     setInstructions(
-        "Player 1 Clue Phase:",
-        "Your words are highlighted in green. Think of a clue to give player 2, then click p2 Guess"
+        "Player 1, Think of a Clue",
+
+        `Your cards are highlighted in green. Think of a clue to give player 2.
+        A clue consists of:
+        1) A single word that can hint at multiple cards
+        2) The number of cards your clue applies to`,
+
+        "DONE"
+    );
+}
+
+function p2Guess() {
+    clearBoard();
+    playerGuessing = 2;
+    showBoardProgress();
+
+    // Set instructions
+    setInstructions(
+        "Player 2, Guess",
+
+        `Use the clue Player 1 gave you to click on as many cards as you want.`,
+
+        "DONE -- Player 1 look away"
     );
 }
 
@@ -38,8 +93,14 @@ function p2GiveClue() {
 
     // Set instructions
     setInstructions(
-        "Player 2 Clue Phase:",
-        "Your words are highlighted in green. Think of a clue to give player 1, then click p1 Guess"
+        "Player 2, Think of a Clue",
+
+        `Your cards are highlighted in green. Think of a clue to give player 1.
+        A clue consists of:
+        1) A single word that can hint at multiple cards
+        2) The number of cards your clue applies to`,
+
+        "DONE"
     );
 }
 
@@ -50,24 +111,13 @@ function p1Guess() {
 
     // Set instructions
     setInstructions(
-        "Player 1 Guess Phase:",
-        "Use the clue Player 2 gave you to click on as many cards as you want. Then click player 1 Give Clue"
+        "Player 1, Guess",
+
+        `Use the clue Player 1 gave you to click on as many cards as you want.`,
+
+        "DONE -- Player 2 look away"
     );
 }
-
-function p2Guess() {
-    clearBoard();
-    playerGuessing = 2;
-    showBoardProgress();
-
-    // Set instructions
-    setInstructions(
-        "Player 2 Guess Phase:",
-        "Use the clue Player 1 gave you to click on as many cards as you want. Then click player 2 Give Clue"
-    );
-}
-// Testing functions end
-
 
 // Card hover
 cards.hover(function () {
@@ -209,9 +259,10 @@ function clearBoard() {
     cards.addClass("card text-center");
 }
 
-function setInstructions(headerMessage, instructionMessage){
+function setInstructions(headerMessage, instructionMessage, buttonMessage){
     instructionHeader.innerText = headerMessage;
     instructionText.innerText = instructionMessage;
+    gameButton.innerText = buttonMessage;
 }
 
 
@@ -247,13 +298,4 @@ function setUpCards(wordList) {
             row.appendChild(column);
         }
     }
-}
-
-
-// Game loop
-while (!gameOver) {
-    //alert("Player 1 turn to give clue. [Display instructions]");
-
-
-    gameOver = true;
 }

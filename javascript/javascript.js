@@ -1,4 +1,7 @@
 // Game setup
+let p1Name = window.prompt("Player 1, please enter your name:","Andy");
+let p2Name = window.prompt("Player 2, please enter your name:", "Kristine");
+
 const wordList = getWordList();
 setUpCards(wordList);
 
@@ -16,8 +19,8 @@ const gamePhases = {
 }
 
 let boardProgress = "0".repeat(25).split('');
+let gameScore = 0;
 let gameOver = false;
-let playerGuessing = 2;
 let gamePhase = gamePhases.GAMESTART;
 
 const cards = $(".card");
@@ -25,43 +28,53 @@ const instructionHeader = document.getElementById("instruction-header");
 const instructionText = document.getElementById("instruction-text");
 const gameButton = document.getElementById("gameButton");
 
+setInstructions(
+    "GAME START",
+    `${p2Name}, look away. ${p1Name}, press "Start"`,
+    "START GAME"
+)
+// End game setup
+
 
 function nextPhase(){
-    gamePhase++;
-
-    if (gamePhase === gamePhases.INVALID){
+    if (gamePhase === gamePhases.P1_GUESS)
+    {
         gamePhase = gamePhases.P1_GIVECLUE;
+    } else {
+        gamePhase++;
     }
-    
 
     switch (gamePhase) {
         case gamePhases.P1_GIVECLUE:
-            p1GiveClue();
+            giveClue();
             break;
         case gamePhases.P2_GUESS:
-            p2Guess();
+            guess();
             break;
         case gamePhases.P2_GIVECLUE:
-            p2GiveClue();
+            giveClue();
             break;
         case gamePhases.P1_GUESS:
-            p1Guess();
+            guess();
             break;
     }
 }
 
-function p1GiveClue() {
+function giveClue() {
+    // Get correct player names
+    let cluePlayer = (gamePhase === gamePhases.P1_GIVECLUE) ? p1Name : p2Name;
+    let guessingPlayer = (gamePhase === gamePhases.P1_GIVECLUE) ? p2Name : p1Name;
+
     // Manage board and game
     clearBoard();
     showBoardProgress();
-    playerGuessing = 2;
-    showPlayerBoard(playerGuessing);
+    showPlayerBoard();
 
     // Set instructions
     setInstructions(
-        "Player 1, Think of a Clue",
+        `${cluePlayer}, Think of a Clue`,
 
-        `Your cards are highlighted in green. Think of a clue to give player 2.
+        `Your cards are highlighted in green. Think of a clue to give to ${guessingPlayer}.
         A clue consists of:
         1) A single word that can hint at multiple cards
         2) The number of cards your clue applies to`,
@@ -70,52 +83,21 @@ function p1GiveClue() {
     );
 }
 
-function p2Guess() {
+function guess() {
+    // Get correct player names
+    let guessingPlayer = (gamePhase === gamePhases.P1_GUESS) ? p1Name : p2Name;
+    let cluePlayer = (gamePhase === gamePhases.P1_GUESS) ? p2Name : p1Name;
+
     clearBoard();
-    playerGuessing = 2;
     showBoardProgress();
 
     // Set instructions
     setInstructions(
-        "Player 2, Guess",
+        `${guessingPlayer}, Guess`,
 
-        `Use the clue Player 1 gave you to click on as many cards as you want.`,
+        `Use the clue given to guess as many cards as you want -- but try not to make a wrong guess!`,
 
-        "DONE -- Player 1 look away"
-    );
-}
-
-function p2GiveClue() {
-    clearBoard();
-    showBoardProgress();
-    playerGuessing = 1;
-    showPlayerBoard(playerGuessing);
-
-    // Set instructions
-    setInstructions(
-        "Player 2, Think of a Clue",
-
-        `Your cards are highlighted in green. Think of a clue to give player 1.
-        A clue consists of:
-        1) A single word that can hint at multiple cards
-        2) The number of cards your clue applies to`,
-
-        "DONE"
-    );
-}
-
-function p1Guess() {
-    clearBoard();
-    playerGuessing = 1;
-    showBoardProgress();
-
-    // Set instructions
-    setInstructions(
-        "Player 1, Guess",
-
-        `Use the clue Player 1 gave you to click on as many cards as you want.`,
-
-        "DONE -- Player 2 look away"
+        `DONE -- ${cluePlayer} look away`
     );
 }
 
@@ -129,23 +111,36 @@ cards.hover(function () {
 // Card click
 cards.on('click', '*', function (event) {
     let card = getClickedCard(event);
-    guessCard(card, playerGuessing);
+    guessCard(card);
 });
 
-function guessCard(card, playerGuessing) {
-    if (playerGuessing === 1)
-        if (playerTwoKey[card.id] === "1") {
-            $(card).addClass("bg-success")
-            boardProgress[card.id.toString()] = "1";
-        } else {
-            $(card).addClass("bg-danger")
-        } else {
-        if (playerOneKey[card.id] === "1") {
-            $(card).addClass("bg-success")
-            boardProgress[card.id.toString()] = "1";
-        } else {
-            $(card).addClass("bg-danger")
+function guessCard(card) {
+    // If card hasn't been guessed already, see whose turn it is to guess.
+    // Whichever player is guessing, test against the other player's key and highlight card appropriately
+    if (boardProgress[card.id] === "0"){
+        if (gamePhase === gamePhases.P1_GUESS)
+            if (playerTwoKey[card.id] === "1") {
+                $(card).addClass("bg-success")
+                boardProgress[card.id.toString()] = "1";
+                gameScore++;
+            } else {
+                $(card).addClass("bg-danger")
+        } else if (gamePhase ===gamePhases.P2_GUESS) {
+            if (playerOneKey[card.id] === "1") {
+                $(card).addClass("bg-success")
+                boardProgress[card.id.toString()] = "1";
+                gameScore++;
+            } else {
+                $(card).addClass("bg-danger")
+            }
         }
+    }
+    testForWin();
+}
+
+function testForWin(){
+    if (gameScore > 14){
+        alert("Win!");
     }
 }
 
@@ -233,11 +228,10 @@ function showBoardProgress() {
 
 }
 
-function showPlayerBoard(playerGuessing) {
+function showPlayerBoard() {
     let currentCard;
 
-    // Turn = 1 means player 1 will be guessing this turn, so we are showing playerTwoKey to playerTwo
-    if (playerGuessing === 1) {
+    if (gamePhase === gamePhases.P2_GIVECLUE) {
         for (let i = 0; i < playerTwoKey.length; i++) {
             if (playerTwoKey[i] === "1") {
                 // This means the card is part of PlayerTwo key

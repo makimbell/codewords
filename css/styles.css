@@ -12,4 +12,16 @@
     .card-title{
         font-size: 0.8em;
     }
+
+    h1{
+        font-size: 1.5em;
+    }
+
+    h2{
+        font-size: 1.2em;
+    }
+
+    h3{
+        font-size: 1em;
+    }
 }

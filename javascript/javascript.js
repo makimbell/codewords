@@ -1,4 +1,6 @@
-// Game setup
+////////////////
+// Game setup //
+////////////////
 let p1Name = window.prompt("Player 1, please enter your name:","Andy");
 let p2Name = window.prompt("Player 2, please enter your name:", "Kristine");
 
@@ -24,17 +26,23 @@ let gameOver = false;
 let gamePhase = gamePhases.GAMESTART;
 
 const cards = $(".card");
-const instructionHeader = document.getElementById("instruction-header");
-const instructionText = document.getElementById("instruction-text");
-const gameButton = document.getElementById("gameButton");
+const instructionHeader = $("#instruction-header");
+const instructionText = $("#instruction-text");
+const gameButton = $("#gameButton");
+const clueForm = $("#clue-form");
+const clueDisplay = $("#clue-display");
+
+clueForm.hide();
+clueDisplay.hide();
 
 setInstructions(
     "GAME START",
     `${p2Name}, look away. ${p1Name}, press "Start"`,
     "START GAME"
 )
-// End game setup
-
+////////////////////
+// End game setup //
+////////////////////
 
 function nextPhase(){
     if (gamePhase === gamePhases.P1_GUESS)
@@ -69,15 +77,14 @@ function giveClue() {
     clearBoard();
     showBoardProgress();
     showPlayerBoard();
+    showClueForm();
+    clueDisplay.hide();
 
     // Set instructions
     setInstructions(
         `${cluePlayer}, Think of a Clue`,
 
-        `Your cards are highlighted in green. Think of a clue to give to ${guessingPlayer}.
-        A clue consists of:
-        1) A single word that can hint at multiple cards
-        2) The number of cards your clue applies to`,
+        `Your cards are highlighted in green. Think of a clue to give to ${guessingPlayer}.`,
 
         "DONE"
     );
@@ -90,6 +97,8 @@ function guess() {
 
     clearBoard();
     showBoardProgress();
+    showClue();
+    clueForm.hide();
 
     // Set instructions
     setInstructions(
@@ -99,6 +108,18 @@ function guess() {
 
         `DONE -- ${cluePlayer} look away`
     );
+}
+
+function showClue(){
+    let clueDisplayText = `Your clue: "${$("#clue-input").val()}" applies to ${$("#clue-num-select").val()} cards`
+    $("#clue-display-text").text(clueDisplayText);
+    clueDisplay.show();
+}
+
+function showClueForm(){
+    clueForm.show();
+    $("#clue-input").val("");
+    $("#clue-num-select").val("1");
 }
 
 // Card hover
@@ -254,9 +275,9 @@ function clearBoard() {
 }
 
 function setInstructions(headerMessage, instructionMessage, buttonMessage){
-    instructionHeader.innerText = headerMessage;
-    instructionText.innerText = instructionMessage;
-    gameButton.innerText = buttonMessage;
+    instructionHeader.text(headerMessage);
+    instructionText.text(instructionMessage);
+    gameButton.text(buttonMessage);
 }
 
 

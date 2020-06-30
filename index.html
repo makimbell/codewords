@@ -13,7 +13,26 @@
     <title></title>
 </head>
 <body>
-<h1 class="text-center">Codewords</h1>
+
+<nav class="navbar navbar-expand navbar-light bg-light">
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Restart</a>
+            </li>
+        </ul>
+        <button class="btn btn-outline-success my-2 my-sm-0">Settings</button>
+    </div>
+</nav>
+
+<div>
+    <h1 class="text-center">Codewords</h1>
+</div>
 
 <div id="card-container" class="container-fluid">
     <div id="row0" class="row">
@@ -28,12 +47,14 @@
     </div>
 </div>
 
+<hr/>
+
 <div id="instructions" class="container-fluid">
     <h2 id="instruction-header" class="text-center"></h1>
     <h3 id="instruction-text" class="text-center"></h3>
 </div>
 
-<div id="display" class="container-fluid col-md-4 col-md-offset-4" class="text-center">
+<div id="display" class="container-fluid col-md-5 col-md-offset-5" class="text-center">
     <form id="clue-form">
         <div class="form-group">
             <label for="clue-input">Enter a single-word clue that applies to one or more of your cards:</label>

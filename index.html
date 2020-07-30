@@ -23,7 +23,7 @@
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Restart</a>
+                <a class="btn nav-link" onclick=location.reload()>Restart</a>
             </li>
         </ul>
         <button class="btn btn-outline-success my-2 my-sm-0">Settings</button>
@@ -50,7 +50,7 @@
 <hr/>
 
 <div id="instructions" class="container-fluid">
-    <h2 id="instruction-header" class="text-center"></h1>
+    <h2 id="instruction-header" class="text-center"></h2>
     <h3 id="instruction-text" class="text-center"></h3>
 </div>
 
@@ -72,9 +72,9 @@
         </div>
     </form>
     <div id="clue-display">
-        <h3 id="clue-display-text" class="text-center">Clue display test</h3>
+        <h3 id="clue-display-text" class="text-center"></h3>
     </div>    
-    <label type="button" id="gameButton" class="btn btn-primary form-control" onclick="nextPhase()"></button>
+    <label type="button" id="gameButton" class="btn btn-primary form-control" onclick="nextPhase()">START</label>
 </div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -90,5 +90,6 @@
 <!-- My JavaScript -->
 <script src="javascript/wordbank.js"></script>
 <script src="javascript/javascript.js"></script>
+
 </body>
 </html>

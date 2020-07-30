@@ -1,16 +1,29 @@
 ////////////////
 // Game setup //
 ////////////////
+
+// Get player names
 let p1Name = window.prompt("Player 1, please enter your name:","Andy");
 let p2Name = window.prompt("Player 2, please enter your name:", "Kristine");
 
-const wordList = getWordList();
-setUpCards(wordList);
+// Get word list from public Google Sheet and then set up the game
+$.ajax({url: "https://spreadsheets.google.com/feeds/cells/1bu6zVoDkMwdP1U9mJriq99YNh8OMtRV4ke-IeqULYhY/1/public/values?alt=json", success: function(result){
+        let wordBank = loadWordBankFromJson(result);
+        console.log(wordBank);
+        setUpCards(wordBank);
+        setUpEventListeners();
+        setInstructions(
+            `${p2Name}, look away. ${p1Name}, press START`,
+            "START"
+        )
+    }});
 
+// Generate answer keys for each player
 const playerKeys = generateKeys();
 const playerOneKey = playerKeys[0];
 const playerTwoKey = playerKeys[1];
 
+// Set up game phases. These are used for game flow
 const gamePhases = {
     GAMESTART : 0,
     P1_GIVECLUE : 1,
@@ -19,33 +32,27 @@ const gamePhases = {
     P1_GUESS : 4,
     INVALID : 5
 }
-
-let boardProgress = "0".repeat(25).split('');
-let gameScore = 0;
-let gameOver = false;
 let gamePhase = gamePhases.GAMESTART;
 
-const cards = $(".card");
-const instructionHeader = $("#instruction-header");
-const instructionText = $("#instruction-text");
-const gameButton = $("#gameButton");
-const clueForm = $("#clue-form");
-const clueDisplay = $("#clue-display");
+// Set up board variables. Progress, score, number of turns
+let boardProgress = "0".repeat(25).split('');
+let gameScore = 0;
+let gameTurn = 1;
 
-clueForm.hide();
-clueDisplay.hide();
+// This is a global variable that keeps players from being able to guess after an incorrect guess is made
+let guessActive = false;
 
-setInstructions(
-    "GAME START",
-    `${p2Name}, look away. ${p1Name}, press "Start"`,
-    "START GAME"
-)
+// Set up some DOM elements
+let cards, instructionHeader, instructionText, gameButton, clueForm, clueDisplay;
+
 ////////////////////
 // End game setup //
 ////////////////////
 
 function nextPhase(){
-    if (gamePhase === gamePhases.P1_GUESS)
+    // Cycle to the next game phase.
+    // P1 Guess is the last phase, so if you're at or above that, cycle back to the first phase
+    if (gamePhase >= gamePhases.P1_GUESS)
     {
         gamePhase = gamePhases.P1_GIVECLUE;
     } else {
@@ -74,6 +81,7 @@ function giveClue() {
     let guessingPlayer = (gamePhase === gamePhases.P1_GIVECLUE) ? p2Name : p1Name;
 
     // Manage board and game
+    gameTurn++;
     clearBoard();
     showBoardProgress();
     showPlayerBoard();
@@ -82,15 +90,15 @@ function giveClue() {
 
     // Set instructions
     setInstructions(
-        `${cluePlayer}, Think of a Clue`,
-
-        `Your cards are highlighted in green. Think of a clue to give to ${guessingPlayer}.`,
-
+        `${cluePlayer}, your words are written in green`,
         "DONE"
     );
 }
 
 function guess() {
+    // Activate guessing
+    guessActive = true;
+
     // Get correct player names
     let guessingPlayer = (gamePhase === gamePhases.P1_GUESS) ? p1Name : p2Name;
     let cluePlayer = (gamePhase === gamePhases.P1_GUESS) ? p2Name : p1Name;
@@ -102,10 +110,7 @@ function guess() {
 
     // Set instructions
     setInstructions(
-        `${guessingPlayer}, Guess`,
-
-        `Use the clue given to guess as many cards as you want -- but try not to make a wrong guess!`,
-
+        `${guessingPlayer}, guess cards based on your clue below:`,
         `DONE -- ${cluePlayer} look away`
     );
 }
@@ -122,18 +127,22 @@ function showClueForm(){
     $("#clue-num-select").val("1");
 }
 
-// Card hover
-cards.hover(function () {
-    $(this).addClass("bg-secondary");
-}, function () {
-    $(this).removeClass("bg-secondary");
-});
+function setUpEventListeners() {
+    // Card hover
+    cards.hover(function () {
+        $(this).addClass("bg-secondary");
+    }, function () {
+        $(this).removeClass("bg-secondary");
+    });
 
-// Card click
-cards.on('click', '*', function (event) {
-    let card = getClickedCard(event);
-    guessCard(card);
-});
+    // Card click
+    cards.on('click', '*', function (event) {
+        if (guessActive) {
+            let card = getClickedCard(event);
+            guessCard(card);
+        }
+    });
+}
 
 function guessCard(card) {
     // If card hasn't been guessed already, see whose turn it is to guess.
@@ -146,6 +155,7 @@ function guessCard(card) {
                 gameScore++;
             } else {
                 $(card).addClass("bg-danger")
+                guessActive = false;
         } else if (gamePhase ===gamePhases.P2_GUESS) {
             if (playerOneKey[card.id] === "1") {
                 $(card).addClass("bg-success")
@@ -153,6 +163,7 @@ function guessCard(card) {
                 gameScore++;
             } else {
                 $(card).addClass("bg-danger")
+                guessActive = false;
             }
         }
     }
@@ -274,9 +285,8 @@ function clearBoard() {
     cards.addClass("card text-center");
 }
 
-function setInstructions(headerMessage, instructionMessage, buttonMessage){
+function setInstructions(headerMessage, buttonMessage){
     instructionHeader.text(headerMessage);
-    instructionText.text(instructionMessage);
     gameButton.text(buttonMessage);
 }
 
@@ -313,4 +323,17 @@ function setUpCards(wordList) {
             row.appendChild(column);
         }
     }
+
+    // Populate DOM element variables
+    cards = $(".card");
+    instructionHeader = $("#instruction-header");
+    instructionText = $("#instruction-text");
+    gameButton = $("#gameButton");
+    clueForm = $("#clue-form");
+    clueDisplay = $("#clue-display");
+
+    // Hide elements not needed at start
+    clueForm.hide();
+    clueDisplay.hide();
+
 }

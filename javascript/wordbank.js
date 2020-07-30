@@ -1,7 +1,19 @@
-//TODO: Read these from file
-//TODO: Optionally include "18+" words
+function loadWordBankFromJson(json){
+    let wordBank = [];
+    try {
+        let jsonData = json.feed.entry;
+        for (i = 0; i < jsonData.length; i++) {
+            wordBank.push(jsonData[i].content.$t);
+        }
+    } catch (e) {
+        console.log("json did not load from Google Sheet");
+        wordBank.push(backupWords);
+    }
 
-let wordBank = [
+    return wordBank;
+}
+
+let backupWords = [
     "Hollywood",
     "Screen",
     "Play",

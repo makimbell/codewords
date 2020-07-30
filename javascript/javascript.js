@@ -3,11 +3,13 @@
 ////////////////
 
 // Get player names
-let p1Name = window.prompt("Player 1, please enter your name:","Andy");
+let p1Name = window.prompt("Player 1, please enter your name:", "Andy");
 let p2Name = window.prompt("Player 2, please enter your name:", "Kristine");
 
 // Get word list from public Google Sheet and then set up the game
-$.ajax({url: "https://spreadsheets.google.com/feeds/cells/1bu6zVoDkMwdP1U9mJriq99YNh8OMtRV4ke-IeqULYhY/1/public/values?alt=json", success: function(result){
+$.ajax({
+    url: "https://spreadsheets.google.com/feeds/cells/1bu6zVoDkMwdP1U9mJriq99YNh8OMtRV4ke-IeqULYhY/1/public/values?alt=json",
+    success: function (result) {
         let wordBank = loadWordBankFromJson(result);
         console.log(wordBank);
         setUpCards(wordBank);
@@ -16,7 +18,8 @@ $.ajax({url: "https://spreadsheets.google.com/feeds/cells/1bu6zVoDkMwdP1U9mJriq9
             `${p2Name}, look away. ${p1Name}, press START`,
             "START"
         )
-    }});
+    }
+});
 
 // Generate answer keys for each player
 const playerKeys = generateKeys();
@@ -25,12 +28,12 @@ const playerTwoKey = playerKeys[1];
 
 // Set up game phases. These are used for game flow
 const gamePhases = {
-    GAMESTART : 0,
-    P1_GIVECLUE : 1,
-    P2_GUESS : 2,
-    P2_GIVECLUE : 3,
-    P1_GUESS : 4,
-    INVALID : 5
+    GAMESTART: 0,
+    P1_GIVECLUE: 1,
+    P2_GUESS: 2,
+    P2_GIVECLUE: 3,
+    P1_GUESS: 4,
+    INVALID: 5
 }
 let gamePhase = gamePhases.GAMESTART;
 
@@ -49,11 +52,10 @@ let cards, instructionHeader, instructionText, gameButton, clueForm, clueDisplay
 // End game setup //
 ////////////////////
 
-function nextPhase(){
+function nextPhase() {
     // Cycle to the next game phase.
     // P1 Guess is the last phase, so if you're at or above that, cycle back to the first phase
-    if (gamePhase >= gamePhases.P1_GUESS)
-    {
+    if (gamePhase >= gamePhases.P1_GUESS) {
         gamePhase = gamePhases.P1_GIVECLUE;
     } else {
         gamePhase++;
@@ -78,7 +80,6 @@ function nextPhase(){
 function giveClue() {
     // Get correct player names
     let cluePlayer = (gamePhase === gamePhases.P1_GIVECLUE) ? p1Name : p2Name;
-    let guessingPlayer = (gamePhase === gamePhases.P1_GIVECLUE) ? p2Name : p1Name;
 
     // Manage board and game
     gameTurn++;
@@ -115,13 +116,13 @@ function guess() {
     );
 }
 
-function showClue(){
+function showClue() {
     let clueDisplayText = `Your clue: "${$("#clue-input").val()}" applies to ${$("#clue-num-select").val()} cards`
     $("#clue-display-text").text(clueDisplayText);
     clueDisplay.show();
 }
 
-function showClueForm(){
+function showClueForm() {
     clueForm.show();
     $("#clue-input").val("");
     $("#clue-num-select").val("1");
@@ -147,7 +148,7 @@ function setUpEventListeners() {
 function guessCard(card) {
     // If card hasn't been guessed already, see whose turn it is to guess.
     // Whichever player is guessing, test against the other player's key and highlight card appropriately
-    if (boardProgress[card.id] === "0"){
+    if (boardProgress[card.id] === "0") {
         if (gamePhase === gamePhases.P1_GUESS)
             if (playerTwoKey[card.id] === "1") {
                 $(card).addClass("bg-success")
@@ -156,7 +157,7 @@ function guessCard(card) {
             } else {
                 $(card).addClass("bg-danger")
                 guessActive = false;
-        } else if (gamePhase ===gamePhases.P2_GUESS) {
+            } else if (gamePhase === gamePhases.P2_GUESS) {
             if (playerOneKey[card.id] === "1") {
                 $(card).addClass("bg-success")
                 boardProgress[card.id.toString()] = "1";
@@ -170,8 +171,8 @@ function guessCard(card) {
     testForWin();
 }
 
-function testForWin(){
-    if (gameScore > 14){
+function testForWin() {
+    if (gameScore > 14) {
         alert("Win!");
     }
 }
@@ -261,8 +262,6 @@ function showBoardProgress() {
 }
 
 function showPlayerBoard() {
-    let currentCard;
-
     if (gamePhase === gamePhases.P2_GIVECLUE) {
         for (let i = 0; i < playerTwoKey.length; i++) {
             if (playerTwoKey[i] === "1") {
@@ -285,7 +284,7 @@ function clearBoard() {
     cards.addClass("card text-center");
 }
 
-function setInstructions(headerMessage, buttonMessage){
+function setInstructions(headerMessage, buttonMessage) {
     instructionHeader.text(headerMessage);
     gameButton.text(buttonMessage);
 }

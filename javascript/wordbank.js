@@ -1,4 +1,4 @@
-function loadWordBankFromJson(json){
+function loadWordBankFromJson(json) {
     let wordBank = [];
     try {
         let jsonData = json.feed.entry;

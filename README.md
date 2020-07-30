@@ -4,7 +4,7 @@
 ### Game Summary and Instructions
 Codewords is a game for two players. The board consists of a grid of 25 cards, each displaying a single word. Begin the game by entering the players' names and then pressing the START button. 
 
-On your turn, the other player looks away, and your Codewords are highlighted. These are the words that you must get the other player to guess. You enter a single-word clue into the text box provided and indicate how many of your cards relate to that clue. Click the button and show the screen to the other player.
+On your turn, the other player looks away, and your Codewords are highlighted. These are the words that you must get the other player to guess. Enter a single-word clue into the text box provided and indicate how many of your cards relate to that clue. Click the button and show the screen to the other player.
 
 The other player looks at your clue and tries to guess which cards you are indicating. If he or she makes a wrong guess, the turn is over.
 

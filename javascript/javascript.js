@@ -40,7 +40,7 @@ let gamePhase = gamePhases.GAMESTART;
 // Set up board variables. Progress, score, number of turns
 let boardProgress = "0".repeat(25).split('');
 let gameScore = 0;
-let gameTurn = 1;
+let gameTurn = 0;
 
 // This is a global variable that keeps players from being able to guess after an incorrect guess is made
 let guessActive = false;
@@ -82,7 +82,6 @@ function giveClue() {
     let cluePlayer = (gamePhase === gamePhases.P1_GIVECLUE) ? p1Name : p2Name;
 
     // Manage board and game
-    gameTurn++;
     clearBoard();
     showBoardProgress();
     showPlayerBoard();
@@ -97,6 +96,9 @@ function giveClue() {
 }
 
 function guess() {
+    // Increment game turn counter
+    gameTurn++;
+
     // Activate guessing
     guessActive = true;
 
@@ -173,7 +175,7 @@ function guessCard(card) {
 
 function testForWin() {
     if (gameScore > 14) {
-        alert("Win!");
+        alert(`You won in ${gameTurn} turns!`);
     }
 }
 

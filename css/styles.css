@@ -1,3 +1,7 @@
+.card > *{
+    cursor: pointer;
+}
+
 @media only screen and (max-width:800px){
     .card-body{
         padding-left: 0;

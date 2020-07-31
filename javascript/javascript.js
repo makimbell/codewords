@@ -12,7 +12,7 @@ $.ajax({
     success: function (result) {
         let wordBank = loadWordBankFromJson(result);
         console.log(wordBank);
-        setUpCards(wordBank);
+        setUpCards(getWordList(wordBank));
         setUpEventListeners();
         setInstructions(
             `${p2Name}, look away. ${p1Name}, press START`,
@@ -190,7 +190,7 @@ function getClickedCard(event) {
     return document.getElementById(id);
 }
 
-function getWordList() {
+function getWordList(wordBank) {
     let wordList = [];
     for (let i = 0; i < 25; i++) {
         let wordIndex = Math.floor(Math.random() * wordBank.length);

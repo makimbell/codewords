@@ -22,9 +22,7 @@ let p2Name = window.prompt("Player 2, please enter your name:", "Kristine");
 //     }
 // });
 
-var wordBank = backupWords;
-console.log(wordBank);
-setUpCards(getWordList(wordBank));
+setUpCards(getWordList(backupWords));
 setUpEventListeners();
 setInstructions(`${p2Name}, look away. ${p1Name}, press START`, "START");
 
@@ -53,7 +51,7 @@ let gameTurn = 0;
 let guessActive = false;
 
 // Set up some DOM elements
-let cards, instructionHeader, instructionText, gameButton, clueForm, clueDisplay;
+var cards, instructionHeader, instructionText, gameButton, clueForm, clueDisplay;
 
 ////////////////////
 // End game setup //

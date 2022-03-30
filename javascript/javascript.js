@@ -7,19 +7,26 @@ let p1Name = window.prompt("Player 1, please enter your name:", "Andy");
 let p2Name = window.prompt("Player 2, please enter your name:", "Kristine");
 
 // Get word list from public Google Sheet and then set up the game
-$.ajax({
-    url: "https://spreadsheets.google.com/feeds/cells/1bu6zVoDkMwdP1U9mJriq99YNh8OMtRV4ke-IeqULYhY/1/public/values?alt=json",
-    success: function (result) {
-        let wordBank = loadWordBankFromJson(result);
-        console.log(wordBank);
-        setUpCards(getWordList(wordBank));
-        setUpEventListeners();
-        setInstructions(
-            `${p2Name}, look away. ${p1Name}, press START`,
-            "START"
-        )
-    }
-});
+// Not doing this for now. Just get word list from backupWords
+// $.ajax({
+//     url: "https://spreadsheets.google.com/feeds/cells/1bu6zVoDkMwdP1U9mJriq99YNh8OMtRV4ke-IeqULYhY/1/public/values?alt=json",
+//     success: function (result) {
+//         let wordBank = loadWordBankFromJson(result);
+//         console.log(wordBank);
+//         setUpCards(getWordList(wordBank));
+//         setUpEventListeners();
+//         setInstructions(
+//             `${p2Name}, look away. ${p1Name}, press START`,
+//             "START"
+//         )
+//     }
+// });
+
+var wordBank = backupWords;
+console.log(wordBank);
+setUpCards(getWordList(wordBank));
+setUpEventListeners();
+setInstructions(`${p2Name}, look away. ${p1Name}, press START`, "START");
 
 // Generate answer keys for each player
 const playerKeys = generateKeys();
